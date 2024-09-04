@@ -131,7 +131,7 @@ module.exports = function (Topics) {
 			await renameTag(tagData.value, tagData.newName);
 		}
 	};
-
+	const updateTagValues = tags => tags.map(tagItem => tagItem.value);
 	async function renameTag(tag, newTagName) {
 		if (!newTagName || tag === newTagName) {
 			return;
@@ -157,9 +157,6 @@ module.exports = function (Topics) {
 			await db.sortedSetRemove(cids.map(cid => `cid:${cid}:tag:${tag}:topics`), tids);
 
 			// update 'tags' field in topic hash
-			function updateTagValues(tags) {
-				return tags.map(tagItem => tagItem.value);
-			}
 			topicData.forEach((topic) => {
 				topic.tags = updateTagValues(topic.tags);
 				const index = topic.tags.indexOf(tag);
