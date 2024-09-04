@@ -157,8 +157,11 @@ module.exports = function (Topics) {
 			await db.sortedSetRemove(cids.map(cid => `cid:${cid}:tag:${tag}:topics`), tids);
 
 			// update 'tags' field in topic hash
+			function updateTagValues(tags) {
+				return tags.map(tagItem => tagItem.value);
+			}
 			topicData.forEach((topic) => {
-				topic.tags = topic.tags.map(tagItem => tagItem.value);
+				topic.tags = updateTagValues(topic.tags);
 				const index = topic.tags.indexOf(tag);
 				if (index !== -1) {
 					topic.tags.splice(index, 1, newTagName);
